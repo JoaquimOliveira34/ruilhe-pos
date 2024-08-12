@@ -90,6 +90,10 @@ export default function App() {
     return acc + curr.price * curr.qty;
   }, 0);
 
+  function onClearCart(){
+    setCart([])
+  }
+
   return (
     <div className="App">
       <div className="board">
@@ -97,37 +101,23 @@ export default function App() {
           <h2>Avaibale items</h2>
           <ul>
             {avaibaleItems.map((item) => (
-              <li key={item.id}>
-                  <button onClick={() => onAddToCart(item)}>Add</button>
-
+                <li key={item.id}>
+                  <div>
+                    <span className="qty">{ carts.find(e => e.id === item.id) ?  carts.find(e => e.id === item.id).qty : 0 }</span>
+                  </div>                  <button onClick={() => onAddToCart(item)}>Add</button>
+                  <button disabled={!carts.some(i => i.id === item.id)} onClick={() => onDestroyToCart(item)}>
+                    Decrement
+                  </button>
                   {item.name} - {item.price.toFixed(2)}€ -{" "}
-                {carts.map(
-                  ({ id: cartId }) =>
-                    item.id === cartId && (
-                      <button onClick={() => onDestroyToCart(item)}>
-                        Decrement
-                      </button>
-                    )
-                )}
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div>
-          <h2>Carrinho</h2>
-          <ul>
-            {carts.map(({ id, name, price, qty }) => (
-              <li key={id}>
-                <span className="qty">{qty}</span> {name} - {price}€
-              </li>
+                </li>
             ))}
           </ul>
         </div>
       </div>
-      <div className="buttonBar">
+      <div className="footerBar">
         <h2>Total: {total.toFixed(2)}€</h2>
-        <button>Limpar</button>
-        <button>Imprmir</button>
+        <button onClick={() => onClearCart()} >Limpar</button>
+        <button>Imprimir</button>
       </div>
     </div>
   );
